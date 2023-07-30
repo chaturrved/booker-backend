@@ -4,7 +4,7 @@ import { IsNotEmpty, IsString } from "class-validator";
 @ArgsType()
 export class GetUserArgs{
     @Field()
-    @IsNotEmpty()
     @IsString()
+    @IsNotEmpty()
     _id : string;
 }
