@@ -6,6 +6,8 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
+import { AuthModule } from './auth/auth.module';
+import { BookmarksModule } from './bookmarks/bookmarks.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -14,7 +16,9 @@ import * as Joi from 'joi';
       isGlobal:true,
       validationSchema: Joi.object({
          PORT: Joi.number().required(),
-         MONGODB_URI: Joi.string().required()
+         MONGODB_URI: Joi.string().required(),
+         JWT_EXPIRATION: Joi.number().required(),
+         JWT_SECRET: Joi.string().required(),
       })
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
@@ -23,6 +27,8 @@ import * as Joi from 'joi';
     }),
     UsersModule,
     DatabaseModule,
+    AuthModule,
+    BookmarksModule,
   ],
   controllers: [AppController],
   providers: [AppService],
