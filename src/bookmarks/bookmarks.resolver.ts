@@ -6,6 +6,8 @@ import { GqlAuthGuard } from 'src/auth/guards/gql-auth.guard';
 import { CreateBookmarkInput } from './dto/input/create-bookmark-input.dto';
 import { CurrentUser } from 'src/auth/current-user.decorator';
 import { User } from 'src/users/models/user.model';
+import { getBookmarkArgs } from './dto/args/get-bookmark-args.dto';
+import { UpdateBookmarkInput } from './dto/input/update-bookmark-input.dto';
 
 @Resolver(() => Bookmark)
 export class BookmarksResolver {
@@ -21,10 +23,28 @@ export class BookmarksResolver {
     }
 
     @UseGuards(GqlAuthGuard)
+    @Mutation(() => Bookmark)
+    async updateBookmark(
+        @Args('updateBookmarkData') updateBookmarkData: UpdateBookmarkInput,
+        @CurrentUser() user: User,
+    ) {
+        return this.bookmarkService.updateBookmark(updateBookmarkData, user._id);
+    }
+
+    @UseGuards(GqlAuthGuard)
     @Query(() => [Bookmark], {name: 'bookmarks'})
     async getBookmarks(
         @CurrentUser() user: User
     ){
         return this.bookmarkService.getBookmarks(user._id);
+    }
+
+    @UseGuards(GqlAuthGuard)
+    @Query(() => Bookmark, { name: "bookmark"} )
+    async getBookmark(
+        @Args() getBookmarkArgs: getBookmarkArgs,
+        @CurrentUser() user: User,
+    ){
+        return this.bookmarkService.getBookmark(getBookmarkArgs, user._id);
     }
 }
